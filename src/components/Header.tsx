@@ -28,7 +28,7 @@ export default function Header() {
   const logoColor = useColorModeValue("blue.500", "blue.200");
   const ColorIcon = useColorModeValue(FaMoon, FaSun);
   return (
-    <HStack justify={"space-between"} borderBottomWidth={1}>
+    <HStack mx={8} justify={"space-between"} borderBottomWidth={1}>
       <Box p={2} color={logoColor}>
         <Link to={"/"}>
           <FaTasks size={"36px"} />
