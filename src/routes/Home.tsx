@@ -1,4 +1,4 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "../api";
 import Todo from "../components/Todo";
@@ -15,7 +15,7 @@ interface ITodo {
 export default function Home() {
   const { isLoading, data } = useQuery<ITodo[]>(["todos"], getTodos);
   return (
-    <>
+    <Box w="100%">
       {isLoading ? (
         <>
           <TodoSkeleton />
@@ -34,6 +34,6 @@ export default function Home() {
           deadline={todo.deadline}
         />
       ))}
-    </>
+    </Box>
   );
 }

@@ -1,5 +1,14 @@
-import { Button, Grid, GridItem, Text, VStack } from "@chakra-ui/react";
-import { FaAngleDown, FaCheck } from "react-icons/fa";
+import {
+  Button,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { FaAngleRight, FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 interface ITodoProps {
   pk: number;
@@ -12,52 +21,42 @@ export default function Todo({ pk, done, title, deadline }: ITodoProps) {
   return (
     <Grid
       my={1}
-      mx={8}
-      minH={"45px"}
-      justifyContent={"space-between"}
+      mx={{ base: 8, md: "auto" }}
+      maxW={"686px"}
+      h={"6vh"}
+      justifyContent={"center"}
+      justifyItems={"center"}
       alignItems={"center"}
-      templateColumns={"40px 1fr 1fr 40px"}
+      templateRows={"1fr"}
+      templateColumns={"0.1fr 1fr 1fr 0.1fr"}
       borderBottomWidth={"1px"}
       borderRadius={"base"}
     >
-      <GridItem w="40px" h="40px" borderRadius={"base"}>
-        <Button
-          w="100%"
-          h="100%"
-          size="auto"
-          variant={"link"}
-          borderLeftWidth="1px"
-        >
-          {done ? <FaCheck /> : null}
-        </Button>
+      <GridItem>
+        <Button variant={"link"}>{done ? <FaCheck /> : null}</Button>
       </GridItem>
-      <GridItem
-        textAlign={"center"}
-        h="40px"
-        lineHeight={"40px"}
-        borderLeftWidth="1px"
-        borderRadius={"base"}
-      >
-        {title}
+
+      <GridItem>
+        <Heading fontSize={"lg"} noOfLines={1}>
+          {title}
+        </Heading>
       </GridItem>
-      <GridItem h="40px" borderLeftWidth="1px" borderRadius={"base"}>
-        <VStack spacing={0}>
-          <Text noOfLines={1} fontSize={"xs"}>
-            {deadline === null ? null : `${deadline}까지`}
+
+      <GridItem>
+        <VStack spacing={-2}>
+          <Text fontSize={"sm"}>
+            {deadline !== null ? `${deadline.split(".")[0]}까지` : null}
           </Text>
-          <Text>{deadline === null ? null : "timeleft"}</Text>
+          <Text>{deadline !== null ? "time left 남음" : null}</Text>
         </VStack>
       </GridItem>
-      <GridItem w="40px" h="40px" borderRadius={"base"}>
-        <Button
-          w="100%"
-          h="100%"
-          size="auto"
-          variant={"link"}
-          borderLeftWidth="1px"
-        >
-          <FaAngleDown />
-        </Button>
+
+      <GridItem>
+        <Link to={`todo/${pk}`}>
+          <Button variant={"link"}>
+            <FaAngleRight />
+          </Button>
+        </Link>
       </GridItem>
     </Grid>
   );
