@@ -3,7 +3,6 @@ import {
   Grid,
   GridItem,
   Heading,
-  HStack,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -23,17 +22,16 @@ export default function Todo({ pk, done, title, deadline }: ITodoProps) {
       my={1}
       mx={{ base: 8, md: "auto" }}
       maxW={"686px"}
-      h={"6vh"}
+      minH={"6vh"}
       justifyContent={"center"}
       justifyItems={"center"}
       alignItems={"center"}
-      templateRows={"1fr"}
       templateColumns={"0.1fr 1fr 1fr 0.1fr"}
       borderBottomWidth={"1px"}
       borderRadius={"base"}
     >
       <GridItem>
-        <Button variant={"link"}>{done ? <FaCheck /> : null}</Button>
+        <Button variant={"ghost"}>{done ? <FaCheck /> : null}</Button>
       </GridItem>
 
       <GridItem>

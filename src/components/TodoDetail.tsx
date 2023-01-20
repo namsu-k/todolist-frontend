@@ -1,7 +1,13 @@
-import { Box, Button, Heading, HStack, Text } from "@chakra-ui/react";
+import {
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FaAngleLeft, FaCheck, FaPen } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getTodo } from "../api";
 
 interface ITodoDetail {
@@ -21,33 +27,23 @@ export default function TodoDetail() {
   const { todoPk } = useParams();
   const { isLoading, data } = useQuery<ITodoDetail>([`todo`, todoPk], getTodo);
   return (
-    <Box my={1} mx={{ base: 8, md: "auto" }} maxW={"686px"} h={"6vh"}>
-      <Button>
-        <FaAngleLeft />
-      </Button>
-
-      <HStack gap={0}>
-        {data?.done === true ? <FaCheck /> : null}
-        <Heading>{data?.title}</Heading>
-        <Button>
-          <FaPen />
-        </Button>
-      </HStack>
-
-      <Box>
-        <Text>Description : </Text>
-        <Text>{data?.description}</Text>
-        <Button>
-          <FaPen />
-        </Button>
-      </Box>
-
-      <Text>{data?.created_at}</Text>
-      <Text>{data?.deadline}</Text>
-      <Text>{data?.done}</Text>
-      <Text>{data?.is_owner}</Text>
-      <Text>{data?.time_left}</Text>
-      <Text>{data?.updated_at}</Text>
-    </Box>
+    <Grid
+      my={1}
+      mx={{ base: 8, md: "auto" }}
+      maxW={"686px"}
+      minH={"6vh"}
+      justifyContent={"center"}
+      justifyItems={"center"}
+      alignItems={"center"}
+      borderBottomWidth={"1px"}
+      borderRadius={"base"}
+    >
+      <GridItem w="100%">
+        <Editable defaultValue={data?.title}>
+          <EditablePreview />
+          <EditableInput />
+        </Editable>
+      </GridItem>
+    </Grid>
   );
 }
