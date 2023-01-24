@@ -1,7 +1,11 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   HStack,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,6 +13,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -53,12 +63,68 @@ export default function Home() {
           <FaPlus />
         </Button>
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size={"2xl"}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create New To do</ModalHeader>
           <ModalCloseButton size={"lg"} />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            <FormControl isRequired>
+              <FormLabel>Title</FormLabel>
+              <Input placeholder="할 일을 입력하세요" />
+              <FormHelperText> * 필수 항목입니다</FormHelperText>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Deadline</FormLabel>
+              <HStack>
+                <NumberInput min={2023} max={2025}>
+                  <NumberInputField placeholder="년" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+
+                <NumberInput min={1} max={12}>
+                  <NumberInputField placeholder="월" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+
+                <NumberInput min={1} max={31}>
+                  <NumberInputField placeholder="일" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+
+                <NumberInput min={0} max={23}>
+                  <NumberInputField placeholder="시" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+
+                <NumberInput min={0} max={59}>
+                  <NumberInputField placeholder="분" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </HStack>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Description</FormLabel>
+              <Textarea />
+            </FormControl>
+          </ModalBody>
           <ModalFooter>
             <Button>Submit</Button>
           </ModalFooter>

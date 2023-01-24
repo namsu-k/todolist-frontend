@@ -1,18 +1,28 @@
 import {
+  Avatar,
   Box,
   Button,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaMoon, FaSun, FaTasks } from "react-icons/fa";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
+import useUser from "../lib/useUser";
+import { logOut } from "../api";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
+  const { userLoading, isLoggedIn, user } = useUser();
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -27,6 +37,22 @@ export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
   const logoColor = useColorModeValue("blue.500", "blue.200");
   const ColorIcon = useColorModeValue(FaMoon, FaSun);
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: "Login Out",
+      description: "See you later",
+      status: "loading",
+    });
+    await logOut();
+    queryClient.refetchQueries(["me"]);
+    toast.update(toastId, {
+      status: "success",
+      title: "Done",
+      description: "See you later",
+    });
+  };
   return (
     <HStack mx={8} justifyContent={"space-between"} borderBottomWidth={1}>
       <Box p={2} color={logoColor}>
@@ -41,10 +67,25 @@ export default function Header() {
           aria-label="Toggle dark mode"
           icon={<ColorIcon />}
         />
-        <Button onClick={onLoginOpen}>Log in</Button>
-        <Button onClick={onSignUpOpen} colorScheme={"blue"}>
-          Sign up
-        </Button>
+        {!userLoading ? (
+          !isLoggedIn ? (
+            <>
+              <Button onClick={onLoginOpen}>Log in</Button>
+              <Button onClick={onSignUpOpen} colorScheme={"blue"}>
+                Sign up
+              </Button>
+            </>
+          ) : (
+            <Menu>
+              <MenuButton>
+                <Avatar name={user?.name} size={"sm"} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
+          )
+        ) : null}
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />

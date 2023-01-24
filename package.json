@@ -16,6 +16,7 @@
     "@types/react-dom": "^18.0.10",
     "axios": "^1.2.3",
     "framer-motion": "^8.4.3",
+    "js-cookie": "^3.0.1",
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
     "react-dom": "^18.2.0",
@@ -50,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.2",
     "@types/react-calendar": "^3.9.0"
   }
 }
