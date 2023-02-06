@@ -1,61 +1,81 @@
 import {
   Button,
-  Grid,
-  GridItem,
   Heading,
+  HStack,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { FaAngleRight, FaCheck } from "react-icons/fa";
+import { FaCheck, FaEllipsisV } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { ITodo } from "../routes/Home";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { putTodo } from "../api";
 
-interface ITodoProps {
-  pk: number;
-  done: boolean;
-  title: string;
-  deadline: string;
-}
-
-export default function Todo({ pk, done, title, deadline }: ITodoProps) {
+export default function Todo({
+  id,
+  done,
+  title,
+  created_at,
+  updated_at,
+  user,
+}: ITodo) {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(putTodo, {
+    onSuccess: () => {
+      if (done) {
+        toast({
+          title: "Done",
+          status: "success",
+          description: "Good Job",
+          duration: 1500,
+        });
+      } else {
+        toast({
+          title: "Change Done State",
+          status: "warning",
+          description: "You Can Do It",
+          duration: 1500,
+        });
+      }
+      queryClient.refetchQueries(["todos"]);
+    },
+  });
+  const onClick = () => {
+    done ? (done = false) : (done = true);
+    mutation.mutate({ id, done });
+  };
   return (
-    <Grid
-      my={1}
-      mx={{ base: 8, md: "auto" }}
-      maxW={"686px"}
-      minH={"6vh"}
-      justifyContent={"center"}
-      justifyItems={"center"}
-      alignItems={"center"}
-      templateColumns={"0.1fr 1fr 1fr 0.1fr"}
-      borderBottomWidth={"1px"}
-      borderRadius={"base"}
+    <HStack
+      h="100px"
+      w="70%"
+      mt={4}
+      borderWidth={1}
+      borderRadius={"2xl"}
+      bgColor={"blackAlpha.500"}
     >
-      <GridItem>
-        <Button variant={"ghost"}>{done ? <FaCheck /> : null}</Button>
-      </GridItem>
-
-      <GridItem>
-        <Heading fontSize={"lg"} noOfLines={1}>
-          {title}
-        </Heading>
-      </GridItem>
-
-      <GridItem>
-        <VStack spacing={-2}>
-          <Text fontSize={"sm"}>
-            {deadline !== null ? `${deadline.split(".")[0]}까지` : null}
+      <Button h="40px" w="40px" onClick={onClick}>
+        {done ? <FaCheck /> : null}
+      </Button>
+      <VStack w="100%">
+        <Heading noOfLines={1}>{title}</Heading>
+        <VStack w="60%" spacing={-1} alignItems="flex-end">
+          <Text as={"i"} fontSize={"xs"} colorScheme="gray">
+            {created_at.split("T")[0]} {created_at.split("T")[1].slice(0, 5)}{" "}
+            추가됨
           </Text>
-          <Text>{deadline !== null ? "time left 남음" : null}</Text>
+          <Text as={"i"} fontSize={"xs"} colorScheme="gray">
+            {updated_at.split("T")[0]} {updated_at.split("T")[1].slice(0, 5)}{" "}
+            수정됨
+          </Text>
         </VStack>
-      </GridItem>
-
-      <GridItem>
-        <Link to={`todo/${pk}`}>
-          <Button variant={"link"}>
-            <FaAngleRight />
-          </Button>
-        </Link>
-      </GridItem>
-    </Grid>
+      </VStack>
+      <Link to={`todo/${id}`}>
+        <Button h="40px" w="40px">
+          <FaEllipsisV />
+        </Button>
+      </Link>
+    </HStack>
   );
 }

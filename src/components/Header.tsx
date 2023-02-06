@@ -14,12 +14,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaMoon, FaSun, FaTasks } from "react-icons/fa";
+import { FaMoon, FaPlus, FaSun, FaTasks } from "react-icons/fa";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
 import useUser from "../lib/useUser";
 import { logOut } from "../api";
 import { useQueryClient } from "@tanstack/react-query";
+import AddTodo from "./AddTodo";
 
 export default function Header() {
   const { userLoading, isLoggedIn, user } = useUser();
@@ -37,6 +38,7 @@ export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
   const logoColor = useColorModeValue("blue.500", "blue.200");
   const ColorIcon = useColorModeValue(FaMoon, FaSun);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const queryClient = useQueryClient();
   const toast = useToast();
   const onLogOut = async () => {
@@ -54,7 +56,7 @@ export default function Header() {
     });
   };
   return (
-    <HStack mx={8} justifyContent={"space-between"} borderBottomWidth={1}>
+    <HStack justifyContent={"space-between"} borderBottomWidth={1}>
       <Box p={2} color={logoColor}>
         <Link to={"/"}>
           <FaTasks size={"36px"} />
@@ -76,19 +78,30 @@ export default function Header() {
               </Button>
             </>
           ) : (
-            <Menu>
-              <MenuButton>
-                <Avatar name={user?.name} size={"sm"} />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={onLogOut}>Log out</MenuItem>
-              </MenuList>
-            </Menu>
+            <>
+              <IconButton
+                aria-label="할 일 추가하기"
+                icon={<FaPlus />}
+                w="40px"
+                h="40px"
+                variant={"ghost"}
+                onClick={onOpen}
+              />
+              <Menu>
+                <MenuButton>
+                  <Avatar name={user?.name} size={"sm"} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={onLogOut}>Log out</MenuItem>
+                </MenuList>
+              </Menu>
+            </>
           )
         ) : null}
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
+      <AddTodo isOpen={isOpen} onClose={onClose} />
     </HStack>
   );
 }
